@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificates - type Writing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary-color: #4a69bd;
+            --secondary-color: #6c5ce7;
+            --accent-color: #f39c12;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --white: #fff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 42px;
+            color: var(--white);
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Certificates Grid */
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* Single Certificate Box */
+        .certificate-box {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .certificate-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Certificate Image */
+        .certificate-image {
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .certificate-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .certificate-box:hover .certificate-image img {
+            transform: scale(1.05);
+        }
+
+        /* Certificate Content */
+        .certificate-content {
+            padding: 25px;
+        }
+
+        .certificate-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .certificate-issuer {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .certificate-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Certificate Footer */
+        .certificate-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .certificate-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .certificate-date i {
+            color: var(--primary-color);
+        }
+
+        .certificate-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--light-bg);
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: scale(1.1);
+        }
+
+        /* View Button */
+        .view-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .view-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 105, 189, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+            z-index: 1;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 40px;
+            text-align: center;
+        }
+
+        /* Certificate Image Display */
+        .certificate-image-display {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Download Button */
+        .download-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .download-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--success-color), #229954);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-color);
+            color: var(--white);
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: var(--success-color);
+        }
+
+        .toast.error {
+            background: var(--danger-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .section-header h2 {
+                font-size: 32px;
+            }
+
+            .certificates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Image placeholder styling */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .image-placeholder i {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Section Header -->
+        <div class="section-header">
+            <h2><i class="fas fa-certificate"></i> My Certificates</h2>
+            <p>Professional certifications that validate my skills and expertise</p>
+        </div>
+
+        <!-- Certificates Grid -->
+        <div class="certificates-grid">
+            <!-- Certificate Box 1 -->
+            <div class="certificate-box">
+                <div class="certificate-image">
+                    <img src="img/WhatsApp Image 2025-10-05 at 6.41.18 PM.jpeg" alt="AWS Certificate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-placeholder" style="display: none;">
+                        <i class="fas fa-image"></i>
+                        <span>UX Design for Web Developers</span>
+                        <small>Infosys</small>
+                    </div>
+                </div>
+                <div class="certificate-content">
+                    <h3 class="certificate-title">Front-End Development</h3>
+                    <div class="certificate-issuer">Great Learning academy</div>
+                    <div class="certificate-footer">
+                        <div class="certificate-date">
+                            <i class="fas fa-calendar"></i>
+                            July 2024
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="action-btn" onclick="shareCertificate('AWS2023')">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" onclick="downloadCertificate('AWS2023')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="view-btn" onclick="viewCertificate('AWS2023')">
+                        <i class="fas fa-eye"></i> View Full Certificate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Certificate Box 2 -->
+            <div class="certificate-box">
+                <div class="certificate-image">
+                    <img src="img/WhatsApp Image 2025-10-05 at 6.41.40 PM.jpeg" alt="Google Cloud Certificate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-placeholder" style="display: none;">
+                        <i class="fas fa-image"></i>
+                        <span>Google Cloud Professional Developer</span>
+                        <small>Google Cloud Platform</small>
+                    </div>
+                </div>
+                <div class="certificate-content">
+                    <h3 class="certificate-title">Create a IPL theme Landing page with CSS and HTML</h3>
+                    <div class="certificate-issuer">Great Learning academy</div>
+                    <div class="certificate-footer">
+                        <div class="certificate-date">
+                            <i class="fas fa-calendar"></i>
+                            July 2024
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="action-btn" onclick="shareCertificate('GOOGLE2023')">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" onclick="downloadCertificate('GOOGLE2023')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="view-btn" onclick="viewCertificate('GOOGLE2023')">
+                        <i class="fas fa-eye"></i> View Full Certificate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Certificate Box 3 -->
+            <div class="certificate-box">
+                <div class="certificate-image">
+                    <img src="img/WhatsApp Image 2025-10-05 at 6.39.10 PM.jpeg" alt="Azure Certificate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-placeholder" style="display: none;">
+                        <i class="fas fa-image"></i>
+                        <span>Azure Solutions Architect Expert</span>
+                        <small>Microsoft</small>
+                    </div>
+                </div>
+                <div class="certificate-content">
+                    <h3 class="certificate-title">Java Script</h3>
+                    <div class="certificate-issuer">Infosys</div>
+                    <div class="certificate-footer">
+                        <div class="certificate-date">
+                            <i class="fas fa-calendar"></i>
+                            March 2025
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="action-btn" onclick="shareCertificate('AZURE2023')">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" onclick="downloadCertificate('AZURE2023')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="view-btn" onclick="viewCertificate('AZURE2023')">
+                        <i class="fas fa-eye"></i> View Full Certificate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Certificate Box 4 -->
+            <div class="certificate-box">
+                <div class="certificate-image">
+                    <img src="img/WhatsApp Image 2025-10-05 at 6.38.12 PM.jpeg" alt="React Certificate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-placeholder" style="display: none;">
+                        <i class="fas fa-image"></i>
+                        <span>React Developer Certification</span>
+                        <small>Meta</small>
+                    </div>
+                </div>
+                <div class="certificate-content">
+                    <h3 class="certificate-title">Creating Responsive Web Pages using Bootstrap 4</h3>
+                    <div class="certificate-issuer">Infosys</div>
+                    <div class="certificate-footer">
+                        <div class="certificate-date">
+                            <i class="fas fa-calendar"></i>
+                            March 2023
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="action-btn" onclick="shareCertificate('REACT2023')">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" onclick="downloadCertificate('REACT2023')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="view-btn" onclick="viewCertificate('REACT2023')">
+                        <i class="fas fa-eye"></i> View Full Certificate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div class="modal" id="certificateModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body" id="modalBody">
+                <!-- Certificate will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed!</span>
+    </div>
+
+    <script>
+        // Certificate Data
+        const certificates = {
+            'AWS2023': {
+                title: 'UX Design for Web Developers',
+                recipient: 'Prakash Kumar',
+                issuer: 'Infosys',
+                date: 'March 15, 2025',
+                description: 'For demonstrating expertise in designing distributed systems on AWS and implementing best practices for high availability, fault tolerance, and scalability.',
+                id: 'AWS2023',
+                image: 'img/WhatsApp Image 2025-10-05 at 6.41.18 PM.jpeg'
+            },
+            'GOOGLE2023': {
+                title: 'Google Cloud Professional Developer',
+                recipient: 'Prakash Kumar',
+                issuer: 'Google Cloud Platform',
+                date: 'January 20, 2023',
+                description: 'For excellence in building scalable and reliable applications using Google Cloud technologies including App Engine, Cloud Functions, and Kubernetes.',
+                id: 'GOOGLE2023',
+                image: 'img/WhatsApp Image 2025-10-05 at 6.41.40 PM.jpeg'
+            },
+            'AZURE2023': {
+                title: 'Azure Solutions Architect Expert',
+                recipient: 'Prakash Kumar',
+                issuer: 'Microsoft',
+                date: 'February 10, 2023',
+                description: 'For demonstrating expertise in designing solutions on Microsoft Azure, including compute, network, storage, and security.',
+                id: 'AZURE2023',
+                image: 'img/WhatsApp Image 2025-10-05 at 6.39.10 PM.jpeg'
+            },
+            'REACT2023': {
+                title: 'React Developer Certification',
+                recipient: 'Prakash Kumar',
+                issuer: 'Meta',
+                date: 'December 5, 2022',
+                description: 'For proficiency in building interactive user interfaces with React, including hooks, state management, and component architecture.',
+                id: 'REACT2023',
+                image: 'img/WhatsApp Image 2025-10-05 at 6.38.12 PM.jpeg'
+            }
+        };
+
+        // View Certificate in Modal
+        function viewCertificate(certId) {
+            const cert = certificates[certId];
+            if (cert) {
+                const modal = document.getElementById('certificateModal');
+                const modalBody = document.getElementById('modalBody');
+                
+                modalBody.innerHTML = `
+                    <img src="${cert.image}" alt="${cert.title}" class="certificate-image-display" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="image-placeholder" style="display: none; padding: 60px 20px;">
+                        <i class="fas fa-image" style="font-size: 64px; margin-bottom: 20px;"></i>
+                        <h3>${cert.title}</h3>
+                        <p>${cert.issuer}</p>
+                        <small>${cert.date}</small>
+                    </div>
+                    <div class="download-section">
+                        <button class="download-btn" onclick="downloadCurrentCertificate('${certId}')">
+                            <i class="fas fa-download"></i> Download Certificate
+                        </button>
+                    </div>
+                `;
+                
+                modal.classList.add('show');
+            }
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('certificateModal').classList.remove('show');
+        }
+
+        // Download Certificate
+        function downloadCertificate(certId) {
+            const cert = certificates[certId];
+            if (cert) {
+                showToast('Preparing download...', 'success');
+                
+                // Create a temporary link to download the image
+                const link = document.createElement('a');
+                link.href = cert.image;
+                link.download = `certificate_${certId}.jpg`;
+                link.target = '_blank';
+                
+                // Handle download error
+                link.onerror = function() {
+                    showToast('Image not found. Please check the file path.', 'error');
+                };
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast('Certificate downloaded successfully!', 'success');
+            }
+        }
+
+        function downloadCurrentCertificate(certId) {
+            downloadCertificate(certId);
+        }
+
+        // Share Certificate
+        function shareCertificate(certId) {
+            const shareUrl = `https://portfolio.example.com/certificate/${certId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Certificate',
+                    text: 'Check out my certificate!',
+                    url: shareUrl
+                });
+            } else {
+                navigator.clipboard.writeText(shareUrl);
+                showToast('Share link copied to clipboard!', 'success');
+            }
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            
+            // Update icon
+            const icon = toast.querySelector('i');
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('certificateModal').addEventListener('click', (e) => {
+            if (e.target.id === 'certificateModal') {
+                closeModal();
+            }
+        });
+
+        // Keyboard shortcut
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Handle image loading errors gracefully
+        document.querySelectorAll('.certificate-image img').forEach(img => {
+            img.addEventListener('error', function() {
+                console.log(`Image not found: ${this.src}`);
+            });
+        });
+    </script>
+</body>
+</html>
